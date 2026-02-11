@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --primary: #9b87f5;
+  }
+
+  body {
+    @apply bg-background text-white antialiased;
+    font-family: "Inter", sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-medium transition-all hover:bg-primary-hover hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-surface border border-surface-border text-white font-medium transition-all hover:bg-[#202023] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .input-base {
+    @apply w-full px-4 py-3 rounded-xl bg-surface border border-surface-border text-white transition-all focus:outline-none focus:border-primary placeholder:text-muted/50;
+  }
+
+  .card-base {
+    @apply p-6 rounded-2xl bg-surface border border-surface-border transition-all hover:border-primary/50;
+  }
+
+  .glass-effect {
+    @apply bg-surface/70 backdrop-blur-xl border border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-br from-white to-muted bg-clip-text text-transparent;
+  }
+}
