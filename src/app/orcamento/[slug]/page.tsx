@@ -52,7 +52,7 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
                     </div>
                     <h3 className="text-2xl font-bold">Agilidade Estratégica</h3>
                     <p className="text-muted/70 text-sm leading-relaxed">
-                        Foco total em交付 e performance. Estruturação modular que permite o crescimento sustentável do projeto sem perdas de velocidade.
+                        Foco total em performance. Estruturação modular que permite o crescimento sustentável do projeto sem perdas de velocidade.
                     </p>
                 </div>
 
