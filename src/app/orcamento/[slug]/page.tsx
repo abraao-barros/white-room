@@ -36,7 +36,7 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
                     <div className="w-12 h-1 bg-primary rounded-full shadow-[0_0_15px_rgba(155,135,245,0.5)]" />
                     <span className="text-primary font-bold uppercase tracking-[0.3em] text-[10px]">Apresentação de Proposta Técnica</span>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-6 md:leading-normal bg-gradient-to-r from-white via-white to-white/40 bg-clip-text text-transparent">
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight md:leading-normal bg-gradient-to-r from-white via-white to-white/40 bg-clip-text text-transparent">
                     {budget.projectName}
                 </h1>
                 <p className="text-xl md:text-2xl text-muted max-w-3xl leading-relaxed font-medium">
@@ -126,7 +126,7 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
 
                                 <div className="pt-10 mt-10 border-t border-white/5">
                                     <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 block">Investimento Total</span>
-                                    <div className="text-5xl font-black tracking-tighter text-white">
+                                    <div className="text-4xl md:text-5xl font-black tracking-tighter text-white">
                                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(budget.totalValue)}
                                     </div>
                                     <div className="mt-10 p-4 rounded-2xl bg-white/5 border border-white/5 text-[9px] leading-relaxed text-muted uppercase tracking-widest font-bold text-center">
