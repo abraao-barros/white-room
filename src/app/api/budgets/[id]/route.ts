@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { budgets } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth";
 import { eq, and } from "drizzle-orm";
+import { slugify } from "@/lib/utils";
 
 export async function GET(
   request: Request,
@@ -46,29 +47,53 @@ export async function PATCH(
 
   try {
     const data = await request.json();
+
     const {
       projectName,
       description,
+      type,
       hourlyRate,
       estimatedHours,
+      totalValue,
       deadline,
       deliverables,
     } = data;
 
+    // First, check if the budget exists and has a slug
+    const existingBudget = await db.query.budgets.findFirst({
+      where: and(eq(budgets.id, id), eq(budgets.userId, session.userId)),
+    });
+
+    if (!existingBudget) {
+      return NextResponse.json(
+        { message: "Orçamento não encontrado" },
+        { status: 404 },
+      );
+    }
+
+    const budgetType =
+      type === "fixed" || type === "hourly" ? type : existingBudget.type;
+
     const updateData: any = {
       projectName,
       description,
-      hourlyRate: hourlyRate ? parseFloat(hourlyRate) : undefined,
-      estimatedHours: estimatedHours ? parseFloat(estimatedHours) : undefined,
+      type: budgetType,
+      slug: existingBudget.slug || slugify(projectName),
+      hourlyRate: hourlyRate
+        ? parseFloat(hourlyRate)
+        : budgetType === "fixed"
+          ? null
+          : undefined,
+      estimatedHours: estimatedHours
+        ? parseFloat(estimatedHours)
+        : budgetType === "fixed"
+          ? null
+          : undefined,
+      totalValue: totalValue ? parseFloat(totalValue) : undefined,
       deadline: deadline ? new Date(deadline) : undefined,
       deliverables,
       updatedAt: new Date(),
     };
-
-    if (hourlyRate && estimatedHours) {
-      updateData.totalValue =
-        parseFloat(hourlyRate) * parseFloat(estimatedHours);
-    }
 
     const result = await db
       .update(budgets)

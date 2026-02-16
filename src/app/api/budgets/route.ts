@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { budgets } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth";
 import { eq, desc } from "drizzle-orm";
+import { slugify } from "@/lib/utils";
 
 export async function GET() {
   const session = await getSession();
@@ -30,28 +31,42 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json();
+
     const {
       projectName,
       description,
+      type,
       hourlyRate,
       estimatedHours,
+      totalValue,
       deadline,
       deliverables,
     } = data;
 
-    const totalValue = parseFloat(hourlyRate) * parseFloat(estimatedHours);
-    const slug = `${projectName.toLowerCase().replace(/ /g, "-")}-${Math.random().toString(36).substring(2, 7)}`;
+    if (!projectName) {
+      return NextResponse.json(
+        { message: "Nome do projeto é obrigatório" },
+        { status: 400 },
+      );
+    }
+
+    const slug = slugify(projectName);
+
+    const budgetType = type === "fixed" ? "fixed" : "hourly";
 
     const [budget] = await db
       .insert(budgets)
       .values({
         projectName,
         description,
-        hourlyRate: parseFloat(hourlyRate),
-        estimatedHours: parseFloat(estimatedHours),
-        totalValue,
+        type: budgetType,
+        hourlyRate:
+          budgetType === "hourly" ? parseFloat(hourlyRate) || null : null,
+        estimatedHours:
+          budgetType === "hourly" ? parseFloat(estimatedHours) || null : null,
+        totalValue: parseFloat(totalValue) || 0,
         deadline: new Date(deadline),
-        deliverables,
+        deliverables: deliverables || [],
         slug,
         userId: session.userId,
       })
@@ -59,7 +74,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(budget, { status: 201 });
   } catch (error: any) {
-    console.error("Create budget error:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

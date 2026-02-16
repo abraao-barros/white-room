@@ -108,12 +108,14 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
                             </h3>
 
                             <div className="space-y-10">
-                                <div className="flex justify-between items-baseline">
-                                    <span className="text-sm font-bold text-muted flex items-center gap-2">
-                                        <Clock size={16} /> Horas Estimadas
-                                    </span>
-                                    <span className="text-3xl font-black tracking-tighter">{budget.estimatedHours}h</span>
-                                </div>
+                                {budget.type !== 'fixed' && (
+                                    <div className="flex justify-between items-baseline">
+                                        <span className="text-sm font-bold text-muted flex items-center gap-2">
+                                            <Clock size={16} /> Horas Estimadas
+                                        </span>
+                                        <span className="text-3xl font-black tracking-tighter">{budget.estimatedHours}h</span>
+                                    </div>
+                                )}
 
                                 <div className="flex justify-between items-baseline underline-offset-8">
                                     <span className="text-sm font-bold text-muted flex items-center gap-2">

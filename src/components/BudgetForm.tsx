@@ -2,14 +2,17 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Trash2, Calculator, Calendar, Target } from 'lucide-react'
+import { Plus, Trash2, Calculator, Calendar, Target, Clock } from 'lucide-react'
+import Tabs from '@/components/Tabs'
 
 export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [formData, setFormData] = useState({
         projectName: initialData?.projectName || '',
         description: initialData?.description || '',
+        type: initialData?.type || 'hourly',
         hourlyRate: initialData?.hourlyRate || '',
         estimatedHours: initialData?.estimatedHours || '',
+        fixedTotal: initialData?.type === 'fixed' ? initialData.totalValue : '',
         deadline: initialData?.deadline ? new Date(initialData.deadline).toISOString().split('T')[0] : '',
         deliverables: initialData?.deliverables || [''],
     })
@@ -40,14 +43,26 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         const url = initialData ? `/api/budgets/${initialData.id}` : '/api/budgets'
         const method = initialData ? 'PATCH' : 'POST'
 
+        const totalValue = formData.type === 'hourly'
+            ? (parseFloat(formData.hourlyRate) || 0) * (parseFloat(formData.estimatedHours) || 0)
+            : parseFloat(formData.fixedTotal) || 0
+
+        const payload = {
+            projectName: formData.projectName,
+            description: formData.description,
+            type: formData.type, // 'hourly' or 'fixed'
+            hourlyRate: formData.type === 'hourly' ? formData.hourlyRate : null,
+            estimatedHours: formData.type === 'hourly' ? formData.estimatedHours : null,
+            totalValue: totalValue,
+            deadline: formData.deadline,
+            deliverables: formData.deliverables.filter((d: string) => d.trim() !== ''),
+        }
+
         try {
             const res = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    deliverables: formData.deliverables.filter((d: string) => d.trim() !== ''),
-                }),
+                body: JSON.stringify(payload),
             })
 
             if (!res.ok) throw new Error('Erro ao salvar orçamento')
@@ -61,10 +76,26 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         }
     }
 
-    const totalCalculated = (parseFloat(formData.hourlyRate) || 0) * (parseFloat(formData.estimatedHours) || 0)
+    const totalCalculated = formData.type === 'hourly'
+        ? (parseFloat(formData.hourlyRate) || 0) * (parseFloat(formData.estimatedHours) || 0)
+        : parseFloat(formData.fixedTotal) || 0
+
+    const tabOptions = [
+        { id: 'hourly', label: 'Orçamento por Hora', icon: <Clock size={16} /> },
+        { id: 'fixed', label: 'Escopo Fechado', icon: <Target size={16} /> }
+    ]
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
+            <Tabs
+                options={tabOptions}
+                activeTab={formData.type}
+                onChange={(id) => {
+                    setFormData(prev => ({ ...prev, type: id }));
+                }}
+                className="mx-auto lg:mx-0"
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2 space-y-2">
                     <label className="text-sm font-medium text-muted ml-1">Nome do Projeto</label>
@@ -88,31 +119,49 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted ml-1 flex items-center gap-2">
-                        <Calculator size={14} className="text-primary" /> Valor por Hora (R$)
-                    </label>
-                    <input
-                        type="number"
-                        className="input-base"
-                        required
-                        value={formData.hourlyRate}
-                        onChange={(e) => setFormData({ ...formData, hourlyRate: e.target.value })}
-                        placeholder="0.00"
-                    />
-                </div>
+                {formData.type === 'hourly' ? (
+                    <>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-muted ml-1 flex items-center gap-2">
+                                <Calculator size={14} className="text-primary" /> Valor por Hora (R$)
+                            </label>
+                            <input
+                                type="number"
+                                className="input-base"
+                                required
+                                value={formData.hourlyRate}
+                                onChange={(e) => setFormData({ ...formData, hourlyRate: e.target.value })}
+                                placeholder="0.00"
+                            />
+                        </div>
 
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted ml-1">Horas Estimadas</label>
-                    <input
-                        type="number"
-                        className="input-base"
-                        required
-                        value={formData.estimatedHours}
-                        onChange={(e) => setFormData({ ...formData, estimatedHours: e.target.value })}
-                        placeholder="0"
-                    />
-                </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-muted ml-1">Horas Estimadas</label>
+                            <input
+                                type="number"
+                                className="input-base"
+                                required
+                                value={formData.estimatedHours}
+                                onChange={(e) => setFormData({ ...formData, estimatedHours: e.target.value })}
+                                placeholder="0"
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <div className="md:col-span-1 space-y-2">
+                        <label className="text-sm font-medium text-muted ml-1 flex items-center gap-2">
+                            <Calculator size={14} className="text-primary" /> Valor Total do Projeto (R$)
+                        </label>
+                        <input
+                            type="number"
+                            className="input-base"
+                            required
+                            value={formData.fixedTotal}
+                            onChange={(e) => setFormData({ ...formData, fixedTotal: e.target.value })}
+                            placeholder="0.00"
+                        />
+                    </div>
+                )}
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-muted ml-1 flex items-center gap-2">
@@ -127,10 +176,10 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                     />
                 </div>
 
-                <div className="flex flex-col justify-end">
+                <div className={`flex flex-col justify-end ${formData.type === 'fixed' ? 'md:col-span-1' : ''}`}>
                     <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-primary">
-                            <span className="text-xs font-bold uppercase tracking-wider">Total</span>
+                            <span className="text-xs font-bold uppercase tracking-wider">Investimento {formData.type === 'hourly' ? 'Calculado' : 'Definido'}</span>
                         </div>
                         <p className="text-2xl font-bold text-primary">
                             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalCalculated)}

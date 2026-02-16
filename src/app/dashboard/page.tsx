@@ -2,9 +2,11 @@ import { db } from '@/lib/db'
 import { budgets } from '@/lib/db/schema'
 import { getSession } from '@/lib/auth'
 import Navbar from '@/components/Navbar'
-import { Plus, ExternalLink, Edit, Briefcase, DollarSign, Clock } from 'lucide-react'
+import { Plus, ExternalLink, Edit, Briefcase, DollarSign, Clock, Target } from 'lucide-react'
 import Link from 'next/link'
 import { eq, desc } from 'drizzle-orm'
+
+import BudgetList from '@/components/BudgetList'
 
 export default async function DashboardPage() {
     const session = await getSession()
@@ -58,7 +60,7 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Budgets List */}
+                {/* Budgets List with Tabs */}
                 {userBudgets.length === 0 ? (
                     <div className="card-base text-center py-32 border-dashed border-2 flex flex-col items-center gap-6 bg-surface/10">
                         <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-muted">
@@ -73,54 +75,7 @@ export default async function DashboardPage() {
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        {userBudgets.map((budget) => (
-                            <div key={budget.id} className="card-base group flex flex-col justify-between !bg-surface/40 hover:!bg-surface/60 border-white/5 hover:border-primary/40">
-                                <div className="space-y-6">
-                                    <div className="flex items-start justify-between gap-4">
-                                        <h2 className="text-xl font-bold tracking-tight line-clamp-1">{budget.projectName}</h2>
-                                        <span className="shrink-0 inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-lg border border-primary/20">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(budget.totalValue)}
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-muted line-clamp-2 leading-relaxed h-[40px]">
-                                        {budget.description || 'Sem descrição adicional para este projeto.'}
-                                    </p>
-
-                                    <div className="flex gap-6 py-2">
-                                        <div className="flex items-center gap-1.5 text-xs text-muted/60">
-                                            <Clock size={12} />
-                                            <span>{budget.estimatedHours}h esforço</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
-                                    <div className="flex gap-3">
-                                        <Link
-                                            href={`/dashboard/edit/${budget.id}`}
-                                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 transition-all text-muted hover:text-white"
-                                            title="Editar"
-                                        >
-                                            <Edit size={18} />
-                                        </Link>
-                                        <Link
-                                            href={`/orcamento/${budget.slug}`}
-                                            target="_blank"
-                                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 transition-all text-primary"
-                                            title="Página Pública"
-                                        >
-                                            <ExternalLink size={18} />
-                                        </Link>
-                                    </div>
-
-                                    <span className="text-[10px] uppercase font-bold text-muted/40 tracking-wider">
-                                        {new Date(budget.createdAt).toLocaleDateString('pt-BR')}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <BudgetList budgets={userBudgets} />
                 )}
             </main>
         </div>

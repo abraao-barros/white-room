@@ -22,8 +22,9 @@ export const budgets = pgTable("budgets", {
     .notNull(),
   projectName: text("project_name").notNull(),
   description: text("description"),
-  hourlyRate: doublePrecision("hourly_rate").notNull(),
-  estimatedHours: doublePrecision("estimated_hours").notNull(),
+  type: text("type").default("hourly").notNull(), // 'hourly' or 'fixed'
+  hourlyRate: doublePrecision("hourly_rate"),
+  estimatedHours: doublePrecision("estimated_hours"),
   totalValue: doublePrecision("total_value").notNull(),
   deadline: timestamp("deadline").notNull(),
   deliverables: jsonb("deliverables").notNull(), // Array of strings
