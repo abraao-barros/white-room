@@ -10,7 +10,7 @@ export default function Footer() {
                 <Link href="/" className="text-white/40 hover:text-white transition-colors">LinkedIn</Link>
                 <Link href="/" className="text-white/40 hover:text-white transition-colors">YouTube</Link>
             </div>
-            <p>© {currentYear} BudgetGen — O futuro dos orçamentos digitais.</p>
+            <p>© {currentYear} BRS BudgetGen — O futuro dos orçamentos digitais.</p>
         </footer>
     )
 }
