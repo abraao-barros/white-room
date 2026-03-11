@@ -26,8 +26,11 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
 
     if (!budget) notFound()
 
-    // Fetch system settings
-    const settingsRows = await db.select().from(systemSettings)
+    // Fetch system settings for the project owner
+    const settingsRows = await db
+        .select()
+        .from(systemSettings)
+        .where(eq(systemSettings.userId, budget.userId))
     const settings = settingsRows.reduce((acc, row) => {
         acc[row.id] = row.value
         return acc

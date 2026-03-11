@@ -34,9 +34,18 @@ export const budgets = pgTable("budgets", {
 });
 
 export const systemSettings = pgTable("system_settings", {
-  id: text("id").primaryKey(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  id: text("id").notNull(), // The setting key (e.g. 'footer_text')
   value: text("value").notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => {
+  return [
+    {
+      pk: [table.userId, table.id]
+    }
+  ]
 });
 
 import { relations } from "drizzle-orm";

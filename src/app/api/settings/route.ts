@@ -10,14 +10,15 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const settingsRows = await db.select().from(systemSettings);
-  const settings = settingsRows.reduce(
-    (acc, row) => {
-      acc[row.id] = row.value;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
+  const settingsRows = await db
+    .select()
+    .from(systemSettings)
+    .where(eq(systemSettings.userId, session.userId));
+  
+  const settings = settingsRows.reduce((acc, row) => {
+    acc[row.id] = row.value;
+    return acc;
+  }, {} as Record<string, string>);
 
   return NextResponse.json(settings);
 }
@@ -41,9 +42,14 @@ export async function POST(req: Request) {
     if (typeof value === "string") {
       await db
         .insert(systemSettings)
-        .values({ id, value, updatedAt: new Date() })
+        .values({ 
+          userId: session.userId, 
+          id, 
+          value, 
+          updatedAt: new Date() 
+        })
         .onConflictDoUpdate({
-          target: systemSettings.id,
+          target: [systemSettings.userId, systemSettings.id],
           set: { value, updatedAt: new Date() },
         });
     }
