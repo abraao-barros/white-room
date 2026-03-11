@@ -5,6 +5,8 @@ import {
   uuid,
   doublePrecision,
   jsonb,
+  primaryKey,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -40,13 +42,10 @@ export const systemSettings = pgTable("system_settings", {
   id: text("id").notNull(), // The setting key (e.g. 'footer_text')
   value: text("value").notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-}, (table) => {
-  return [
-    {
-      pk: [table.userId, table.id]
-    }
-  ]
-});
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.id] }),
+  unique("system_settings_unique_idx").on(table.userId, table.id)
+]);
 
 import { relations } from "drizzle-orm";
 
