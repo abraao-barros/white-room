@@ -33,6 +33,12 @@ export const budgets = pgTable("budgets", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const systemSettings = pgTable("system_settings", {
+  id: text("id").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 import { relations } from "drizzle-orm";
 
 export const usersRelations = relations(users, ({ many }) => ({

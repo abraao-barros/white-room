@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { LogOut, PlusCircle, LayoutDashboard } from 'lucide-react'
+import { LogOut, PlusCircle, LayoutDashboard, Settings } from 'lucide-react'
 
 export default function Navbar({ user }: { user?: any }) {
     const router = useRouter()
@@ -27,6 +27,12 @@ export default function Navbar({ user }: { user?: any }) {
                                 <LayoutDashboard size={18} />
                                 Dashboard
                             </Link>
+
+                            <Link href="/dashboard/settings" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+                                <Settings size={18} />
+                                Configurações
+                            </Link>
+
                             <Link href="/dashboard/new" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
                                 <PlusCircle size={18} />
                                 <span className="hidden sm:inline">Novo Orçamento</span>
