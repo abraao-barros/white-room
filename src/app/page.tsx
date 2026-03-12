@@ -4,9 +4,14 @@ import Hero from '@/components/landing/Hero'
 import Features from '@/components/landing/Features'
 import CTA from '@/components/landing/CTA'
 import Footer from '@/components/landing/Footer'
+import { redirect } from 'next/navigation'
 
 export default async function Home() {
   const session = await getSession()
+
+  if (session) {
+    redirect('/dashboard')
+  }
 
   return (
     <div className="min-h-screen bg-background selection:bg-primary/30 relative overflow-hidden">
