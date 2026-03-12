@@ -28,7 +28,7 @@ export default function Navbar({ user }: { user?: any }) {
                                 Dashboard
                             </Link>
 
-                            <Link href="/dashboard/settings" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+                            <Link href="/dashboard/settings" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
                                 <Settings size={18} />
                                 Configurações
                             </Link>
