@@ -15,6 +15,11 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         fixedTotal: initialData?.type === 'fixed' ? initialData.totalValue : '',
         deadline: initialData?.deadline ? new Date(initialData.deadline).toISOString().split('T')[0] : '',
         deliverables: initialData?.deliverables || [''],
+        strategicPillars: initialData?.strategicPillars || [
+            { title: '', description: '' },
+            { title: '', description: '' },
+            { title: '', description: '' },
+        ],
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -56,6 +61,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
             totalValue: totalValue,
             deadline: formData.deadline,
             deliverables: formData.deliverables.filter((d: string) => d.trim() !== ''),
+            strategicPillars: formData.strategicPillars,
         }
 
         try {
@@ -186,6 +192,47 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                         </p>
                     </div>
                 </div>
+            </div>
+            {/* Strategic Pillars */}
+            <div className="space-y-6">
+                <label className="text-sm font-medium text-muted ml-1 flex items-center gap-2">
+                    <Target size={14} className="text-primary" /> Pilares Estratégicos (Diferenciais)
+                </label>
+                <div className="grid grid-cols-1 gap-6">
+                    {formData.strategicPillars.map((pillar: any, index: number) => (
+                        <div key={index} className="space-y-3 p-5 rounded-2xl bg-surface/30 border border-white/5">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-primary/70 mb-2">Pilar 0{index + 1}</h4>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-bold text-muted uppercase tracking-widest px-1">Título</label>
+                                <input
+                                    type="text"
+                                    className="input-base text-sm py-3"
+                                    value={pillar.title}
+                                    placeholder="Ex: Qualidade Premium"
+                                    onChange={(e) => {
+                                        const newPillars = [...formData.strategicPillars];
+                                        newPillars[index] = { ...pillar, title: e.target.value };
+                                        setFormData({ ...formData, strategicPillars: newPillars });
+                                    }}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-bold text-muted uppercase tracking-widest px-1">Descrição</label>
+                                <textarea
+                                    className="input-base text-xs min-h-[80px] py-3 resize-none"
+                                    value={pillar.description}
+                                    placeholder="Ex: Foco total em entregar um código limpo..."
+                                    onChange={(e) => {
+                                        const newPillars = [...formData.strategicPillars];
+                                        newPillars[index] = { ...pillar, description: e.target.value };
+                                        setFormData({ ...formData, strategicPillars: newPillars });
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <p className="text-[10px] text-muted italic ml-1">* Deixe em branco para usar os valores padrão definidos nas configurações globais.</p>
             </div>
 
             <div className="space-y-4">

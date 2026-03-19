@@ -30,6 +30,7 @@ export const budgets = pgTable("budgets", {
   totalValue: doublePrecision("total_value").notNull(),
   deadline: timestamp("deadline").notNull(),
   deliverables: jsonb("deliverables").notNull(), // Array of strings
+  strategicPillars: jsonb("strategic_pillars"), // Array of objects { title, description }
   slug: text("slug").unique().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -44,7 +45,6 @@ export const systemSettings = pgTable("system_settings", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   primaryKey({ columns: [table.userId, table.id] }),
-  unique("system_settings_unique_idx").on(table.userId, table.id)
 ]);
 
 import { relations } from "drizzle-orm";

@@ -60,35 +60,31 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
 
             {/* Strategic Pillars */}
             <section className="mb-32 grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div className="space-y-6 group">
-                    <div className="w-16 h-16 rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                        <Zap size={28} />
-                    </div>
-                    <h3 className="text-2xl font-bold">{getSetting('pillar_1_title', 'Agilidade Estratégica')}</h3>
-                    <p className="text-muted/70 text-sm leading-relaxed">
-                        {getSetting('pillar_1_description', 'Foco total em performance. Estruturação modular que permite o crescimento sustentável do projeto sem perdas de velocidade.')}
-                    </p>
-                </div>
+                {[0, 1, 2].map((idx) => {
+                    const customPillar = (budget.strategicPillars as any)?.[idx];
+                    const defaultIcons = [<Zap key="zap" size={28} />, <ShieldCheck key="shield" size={28} />, <Award key="award" size={28} />];
+                    const defaultTitles = ['Agilidade Estratégica', 'Arquitetura Segura', 'Qualidade Premium'];
+                    const defaultDescs = [
+                        'Foco total em performance. Estruturação modular que permite o crescimento sustentável do projeto sem perdas de velocidade.',
+                        'Utilização das melhores práticas de mercado para garantir a integridade dos dados e a proteção contra as vulnerabilidades mais comuns.',
+                        'Interface refinada e código limpo. O resultado é um produto que não apenas funciona, mas encanta e gera autoridade imediata.'
+                    ];
 
-                <div className="space-y-6 group">
-                    <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-background transition-all duration-500">
-                        <ShieldCheck size={28} />
-                    </div>
-                    <h3 className="text-2xl font-bold">{getSetting('pillar_2_title', 'Arquitetura Segura')}</h3>
-                    <p className="text-muted/70 text-sm leading-relaxed">
-                        {getSetting('pillar_2_description', 'Utilização das melhores práticas de mercado para garantir a integridade dos dados e a proteção contra as vulnerabilidades mais comuns.')}
-                    </p>
-                </div>
+                    const title = customPillar?.title || getSetting(`pillar_${idx + 1}_title`, defaultTitles[idx]);
+                    const description = customPillar?.description || getSetting(`pillar_${idx + 1}_description`, defaultDescs[idx]);
 
-                <div className="space-y-6 group">
-                    <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-background transition-all duration-500">
-                        <Award size={28} />
-                    </div>
-                    <h3 className="text-2xl font-bold">{getSetting('pillar_3_title', 'Qualidade Premium')}</h3>
-                    <p className="text-muted/70 text-sm leading-relaxed">
-                        {getSetting('pillar_3_description', 'Interface refinada e código limpo. O resultado é um produto que não apenas funciona, mas encanta e gera autoridade imediata.')}
-                    </p>
-                </div>
+                    return (
+                        <div key={idx} className="space-y-6 group">
+                            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all duration-500 ${idx === 0 ? 'bg-primary/10 border border-primary/20 text-primary group-hover:bg-primary group-hover:text-white' : 'bg-white/5 border border-white/10 text-white group-hover:bg-white group-hover:text-background'}`}>
+                                {defaultIcons[idx]}
+                            </div>
+                            <h3 className="text-2xl font-bold">{title}</h3>
+                            <p className="text-muted/70 text-sm leading-relaxed">
+                                {description}
+                            </p>
+                        </div>
+                    );
+                })}
             </section>
 
             {/* Core Proposal Details */}

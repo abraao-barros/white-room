@@ -57,6 +57,7 @@ export async function PATCH(
       totalValue,
       deadline,
       deliverables,
+      strategicPillars,
     } = data;
 
     // First, check if the budget exists and has a slug
@@ -92,6 +93,7 @@ export async function PATCH(
       totalValue: totalValue ? parseFloat(totalValue) : undefined,
       deadline: deadline ? new Date(deadline) : undefined,
       deliverables,
+      strategicPillars,
       updatedAt: new Date(),
     };
 

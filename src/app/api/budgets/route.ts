@@ -41,6 +41,7 @@ export async function POST(request: Request) {
       totalValue,
       deadline,
       deliverables,
+      strategicPillars,
     } = data;
 
     if (!projectName) {
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
         totalValue: parseFloat(totalValue) || 0,
         deadline: new Date(deadline),
         deliverables: deliverables || [],
+        strategicPillars: strategicPillars || [],
         slug,
         userId: session.userId,
       })
