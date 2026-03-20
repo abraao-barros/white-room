@@ -21,63 +21,61 @@ export default async function DashboardPage() {
     const projectsCount = userBudgets.length
 
     return (
-        <div className="min-h-screen bg-background">
-            <Navbar user={session} />
+        <div className="p-10 max-w-[1600px] mx-auto animate-in fade-in duration-700">
+            {/* Welcome & Stats */}
+            <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16">
+                <div>
+                    <h1 className="text-4xl lg:text-5xl font-black mb-3 tracking-tight">Dashboard</h1>
+                    <p className="text-muted text-lg italic tracking-tight font-medium opacity-70">
+                        Bem-vindo, <span className="font-bold text-primary">{session.name.split(' ')[0]}</span>. Aqui está o resumo dos seus orçamentos.
+                    </p>
+                </div>
+                <Link href="/dashboard/new" className="btn-primary h-14 px-8 shadow-xl shadow-primary/20 flex items-center gap-2">
+                    <Plus size={20} /> Novo Orçamento
+                </Link>
+            </header>
 
-            <main className="container mx-auto px-6 pb-20">
-                {/* Welcome & Stats */}
-                <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] flex items-center gap-6 group hover:border-primary/20 transition-all">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                        <Briefcase size={28} />
+                    </div>
                     <div>
-                        <h1 className="text-4xl lg:text-5xl font-black mb-3 tracking-tight">Meus Projetos</h1>
-                        <p className="text-muted text-lg italic tracking-tight">Bem-vindo, <span className="font-bold text-primary">{session.name.split(' ')[0]}</span>. Aqui está o resumo dos seus orçamentos.</p>
-                    </div>
-                    <Link href="/dashboard/new" className="btn-primary h-14 px-8 shadow-xl shadow-primary/20">
-                        <Plus size={20} /> Novo Orçamento
-                    </Link>
-                </header>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                    <div className="card-base !bg-surface/30 p-6 flex items-center gap-6">
-                        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                            <Briefcase size={24} />
-                        </div>
-                        <div>
-                            <p className="text-xs font-bold text-muted uppercase tracking-widest">Total Projetos</p>
-                            <p className="text-2xl font-black mt-1">{projectsCount}</p>
-                        </div>
-                    </div>
-                    <div className="card-base !bg-surface/30 p-6 flex items-center gap-6">
-                        <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500">
-                            <DollarSign size={24} />
-                        </div>
-                        <div>
-                            <p className="text-xs font-bold text-muted uppercase tracking-widest">Valor Total</p>
-                            <p className="text-2xl font-black mt-1">
-                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalInvoiced)}
-                            </p>
-                        </div>
+                        <p className="text-[10px] font-black text-muted uppercase tracking-[0.2em] mb-1">Total Projetos</p>
+                        <p className="text-3xl font-black tracking-tighter">{projectsCount}</p>
                     </div>
                 </div>
-
-                {/* Budgets List with Tabs */}
-                {userBudgets.length === 0 ? (
-                    <div className="card-base text-center py-32 border-dashed border-2 flex flex-col items-center gap-6 bg-surface/10">
-                        <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-muted">
-                            <Briefcase size={40} />
-                        </div>
-                        <div>
-                            <p className="text-muted text-lg font-medium mb-1">Inicie seu primeiro orçamento</p>
-                            <p className="text-muted/50 text-sm">Gere propostas de impacto para seus clientes agora mesmo.</p>
-                        </div>
-                        <Link href="/dashboard/new" className="btn-secondary">
-                            Criar agora
-                        </Link>
+                <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] flex items-center gap-6 group hover:border-green-500/20 transition-all">
+                    <div className="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-white transition-all duration-500">
+                        <DollarSign size={28} />
                     </div>
-                ) : (
-                    <BudgetList budgets={userBudgets} />
-                )}
-            </main>
+                    <div>
+                        <p className="text-[10px] font-black text-muted uppercase tracking-[0.2em] mb-1">Valor Total</p>
+                        <p className="text-3xl font-black tracking-tighter">
+                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(totalInvoiced)}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Budgets List */}
+            {userBudgets.length === 0 ? (
+                <div className="card-base bg-[#0f0f11] border-white/5 border-dashed border-2 text-center py-32 rounded-[40px] flex flex-col items-center gap-8">
+                    <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center text-muted/30">
+                        <Briefcase size={48} />
+                    </div>
+                    <div>
+                        <p className="text-white text-2xl font-black tracking-tight mb-2">Inicie seu primeiro orçamento</p>
+                        <p className="text-muted/60 text-base font-medium">Gere propostas de impacto para seus clientes agora mesmo.</p>
+                    </div>
+                    <Link href="/dashboard/new" className="btn-primary h-14 px-10">
+                        Criar agora
+                    </Link>
+                </div>
+            ) : (
+                <BudgetList budgets={userBudgets} />
+            )}
         </div>
     )
 }

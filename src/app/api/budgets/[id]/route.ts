@@ -110,7 +110,7 @@ export async function PATCH(
       );
     }
 
-    return NextResponse.json({ message: "Orçamento atualizado com sucesso" });
+    return NextResponse.json(result[0]);
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

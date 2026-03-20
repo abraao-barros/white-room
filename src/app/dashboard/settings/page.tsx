@@ -1,6 +1,5 @@
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
 import SettingsForm from '@/components/SettingsForm'
 
 
@@ -12,12 +11,12 @@ export default async function SettingsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-white">
-            <Navbar user={session} />
-
-            <main className="container mx-auto px-6 pb-20 max-w-4xl">
-                <SettingsForm />
-            </main>
+        <div className="p-10 max-w-5xl mx-auto animate-in fade-in duration-700">
+            <header className="mb-12">
+                <h1 className="text-4xl font-black tracking-tight mb-2">Configurações do Sistema</h1>
+                <p className="text-muted font-medium opacity-70 italic">Personalize textos globais e branding para todas as suas propostas de orçamento.</p>
+            </header>
+            <SettingsForm />
         </div>
     )
 }
