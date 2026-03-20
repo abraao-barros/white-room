@@ -20,9 +20,7 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="antialiased selection:bg-primary/30 min-h-screen bg-[#070708] text-white">
-        <LayoutWrapper user={session}>
-          {children}
-        </LayoutWrapper>
+        {children}
       </body>
     </html>
   )
