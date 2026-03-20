@@ -9,7 +9,7 @@ export default async function DashboardLayout({
   const session = await getSession()
 
   return (
-    <LayoutWrapper user={session?.user}>
+    <LayoutWrapper user={session}>
       {children}
     </LayoutWrapper>
   )
