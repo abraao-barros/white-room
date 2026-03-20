@@ -1,8 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Sidebar from '@/components/Sidebar'
-import TopNav from '@/components/TopNav'
-import LayoutWrapper from '@/components/LayoutWrapper'
 import { getSession } from '@/lib/auth'
 
 export const metadata: Metadata = {
