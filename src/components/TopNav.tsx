@@ -65,7 +65,6 @@ export default function TopNav({ user }: { user?: any }) {
                     </div>
                     <div className="text-left leading-none space-y-1">
                         <p className="text-xs font-black tracking-tighter text-white">{user?.name || 'User'}</p>
-                        <p className="text-[10px] font-bold text-muted tracking-widest uppercase opacity-60">Admin</p>
                     </div>
                 </button>
             </div>
