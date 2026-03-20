@@ -8,6 +8,7 @@ import {
   primaryKey,
   unique,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -36,18 +37,18 @@ export const budgets = pgTable("budgets", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const systemSettings = pgTable("system_settings", {
-  userId: uuid("user_id")
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-  id: text("id").notNull(), // The setting key (e.g. 'footer_text')
-  value: text("value").notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-}, (table) => [
-  primaryKey({ columns: [table.userId, table.id] }),
-]);
-
-import { relations } from "drizzle-orm";
+export const systemSettings = pgTable(
+  "system_settings",
+  {
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    id: text("id").notNull(), // The setting key (e.g. 'footer_text')
+    value: text("value").notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.id] })],
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
   budgets: many(budgets),
