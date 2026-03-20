@@ -29,7 +29,7 @@
   }
 
   .card-base {
-    @apply p-6 rounded-2xl bg-surface border border-surface-border transition-all hover:border-primary/50;
+    @apply p-6 rounded-2xl bg-surface border-2 border-surface-border transition-all hover:border-primary/50;
   }
 
   .glass-effect {

@@ -79,13 +79,13 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
 
             setSavedBudget(result)
             setShowSuccess(true)
-            
+
             // Revalidate the dashboard
             router.refresh()
 
             // Optional: Hide success message after 5 seconds
             setTimeout(() => setShowSuccess(false), 5000)
-            
+
         } catch (err: any) {
             setError(err.message)
         } finally {
@@ -256,7 +256,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             <h2 className="text-xl font-bold tracking-tight">Pilares estratégicos</h2>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 gap-6">
                             {formData.strategicPillars.map((pillar: any, index: number) => (
                                 <div key={index} className="space-y-4 p-6 rounded-2xl bg-[#16161a] border border-white/5 hover:border-primary/20 transition-all duration-300">
                                     <div className="space-y-2">
@@ -328,7 +328,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                         <button
                                             type="button"
                                             onClick={() => handleRemoveDeliverable(index)}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-muted/30 hover:text-red-500 rounded-lg transition-all"
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-muted/30 bg-transparent hover:bg-red-500/10 hover:text-red-500 rounded-lg transition-all"
                                         >
                                             <Trash2 size={18} />
                                         </button>
@@ -348,9 +348,8 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
 
                         <div className="flex items-baseline gap-2 mb-2">
                             <span className="text-5xl font-black tracking-tight">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(totalCalculated).replace('$', '')}
+                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(totalCalculated)}
                             </span>
-                            <span className="text-sm font-black text-muted opacity-40">R$</span>
                         </div>
                         <p className="text-xs font-bold text-muted/60 mb-10">
                             {formData.type === 'hourly'
@@ -359,14 +358,6 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                         </p>
 
                         <div className="space-y-4 pt-8 border-t border-white/5">
-                            <div className="flex justify-between text-xs font-bold">
-                                <span className="text-muted">Taxa de serviço</span>
-                                <span>R$0,00</span>
-                            </div>
-                            <div className="flex justify-between text-xs font-bold">
-                                <span className="text-muted">Impostos (0%)</span>
-                                <span>R$0,00</span>
-                            </div>
                             <div className="flex justify-between items-center pt-4 mt-4">
                                 <span className="text-sm font-black">Total do Orçamento</span>
                                 <span className="text-lg font-black text-primary">

@@ -4,7 +4,7 @@ export default function PublicLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="min-h-screen bg-[#070708] text-white selection:bg-primary/30 antialiased">
+        <div className="min-h-screen bg-[#070708] text-white selection:bg-primary/30 antialiased overflow-x-hidden">
             {/* Background decoration */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] bg-primary/5 blur-[120px] rounded-full" />
