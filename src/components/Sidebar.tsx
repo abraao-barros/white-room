@@ -15,6 +15,7 @@ import {
 const MENU_ITEMS = [
     { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
     { label: 'Novo orçamento', icon: FileText, href: '/dashboard/new' },
+    { label: 'Status de Orçamentos', icon: Briefcase, href: '/dashboard/status' },
 ]
 
 export default function Sidebar() {

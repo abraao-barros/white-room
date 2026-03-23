@@ -2,10 +2,12 @@ import { Target } from 'lucide-react'
 
 interface BudgetDeliverablesProps {
     deliverables: string[]
-    getSetting: (id: string, defaultValue: string) => string
+    settings: Record<string, string>
 }
 
-export function BudgetDeliverables({ deliverables, getSetting }: BudgetDeliverablesProps) {
+export function BudgetDeliverables({ deliverables, settings }: BudgetDeliverablesProps) {
+    const getSetting = (id: string, defaultValue: string) => settings[id] || defaultValue
+
     return (
         <div className="lg:col-span-12 xl:col-span-7">
             <h2 className="text-3xl font-black mb-10 flex items-center gap-4 tracking-tighter">

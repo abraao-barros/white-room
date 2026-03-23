@@ -34,14 +34,19 @@ export async function POST(request: Request) {
 
     const {
       projectName,
+      clientName,
       description,
+      aboutTitle,
+      aboutDescription,
       type,
       hourlyRate,
       estimatedHours,
       totalValue,
       deadline,
       deliverables,
+      processSteps,
       strategicPillars,
+      paymentTerms,
     } = data;
 
     if (!projectName) {
@@ -51,7 +56,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const slug = slugify(projectName);
+    const slug = `${slugify(projectName)}-${Math.random().toString(36).substring(2, 7)}`;
 
     const budgetType = type === "fixed" ? "fixed" : "hourly";
 
@@ -59,7 +64,10 @@ export async function POST(request: Request) {
       .insert(budgets)
       .values({
         projectName,
+        clientName,
         description,
+        aboutTitle,
+        aboutDescription,
         type: budgetType,
         hourlyRate:
           budgetType === "hourly" ? parseFloat(hourlyRate) || null : null,
@@ -68,7 +76,9 @@ export async function POST(request: Request) {
         totalValue: parseFloat(totalValue) || 0,
         deadline: new Date(deadline),
         deliverables: deliverables || [],
+        processSteps: processSteps || [],
         strategicPillars: strategicPillars || [],
+        paymentTerms,
         slug,
         userId: session.userId,
       })

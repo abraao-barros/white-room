@@ -9,18 +9,25 @@ import Link from 'next/link'
 export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [formData, setFormData] = useState({
         projectName: initialData?.projectName || '',
+        clientName: initialData?.clientName || '',
         description: initialData?.description || '',
+        aboutTitle: initialData?.aboutTitle || '',
+        aboutDescription: initialData?.aboutDescription || '',
         type: initialData?.type || 'hourly',
         hourlyRate: initialData?.hourlyRate || '',
         estimatedHours: initialData?.estimatedHours || '',
         fixedTotal: initialData?.type === 'fixed' ? initialData.totalValue : '',
         deadline: initialData?.deadline ? new Date(initialData.deadline).toISOString().split('T')[0] : '',
         deliverables: initialData?.deliverables || [''],
+        processSteps: initialData?.processSteps || [
+            { icon: 'target', title: '', description: '' }
+        ],
         strategicPillars: initialData?.strategicPillars || [
             { title: '', description: '' },
             { title: '', description: '' },
             { title: '', description: '' },
         ],
+        paymentTerms: initialData?.paymentTerms || '',
     })
     const [loading, setLoading] = useState(false)
     const [savedBudget, setSavedBudget] = useState<any>(null)
@@ -43,6 +50,21 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         setFormData({ ...formData, deliverables: newDeliverables })
     }
 
+    const handleAddProcessStep = () => {
+        setFormData({ ...formData, processSteps: [...formData.processSteps, { icon: 'target', title: '', description: '' }] })
+    }
+
+    const handleRemoveProcessStep = (index: number) => {
+        const newSteps = formData.processSteps.filter((_: any, i: number) => i !== index)
+        setFormData({ ...formData, processSteps: newSteps })
+    }
+
+    const handleProcessStepChange = (index: number, field: string, value: string) => {
+        const newSteps = [...formData.processSteps]
+        newSteps[index] = { ...newSteps[index], [field]: value }
+        setFormData({ ...formData, processSteps: newSteps })
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
@@ -57,14 +79,19 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
 
         const payload = {
             projectName: formData.projectName,
+            clientName: formData.clientName,
             description: formData.description,
+            aboutTitle: formData.aboutTitle,
+            aboutDescription: formData.aboutDescription,
             type: formData.type, // 'hourly' or 'fixed'
             hourlyRate: formData.type === 'hourly' ? formData.hourlyRate : null,
             estimatedHours: formData.type === 'hourly' ? formData.estimatedHours : null,
             totalValue: totalValue,
             deadline: formData.deadline,
             deliverables: formData.deliverables.filter((d: string) => d.trim() !== ''),
+            processSteps: formData.processSteps.filter((p: any) => p.title.trim() !== ''),
             strategicPillars: formData.strategicPillars,
+            paymentTerms: formData.paymentTerms,
         }
 
         try {
@@ -164,12 +191,56 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             </div>
 
                             <div className="space-y-3">
+                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Nome do cliente</label>
+                                <input
+                                    type="text"
+                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] h-14"
+                                    value={formData.clientName}
+                                    onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
+                                    placeholder="e.g. Acme Corp"
+                                />
+                            </div>
+
+                            <div className="space-y-3">
                                 <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Descrição</label>
                                 <textarea
                                     className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[160px] resize-none py-4"
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Breve descrição do escopo do projeto..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* About Section */}
+                    <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] space-y-8">
+                        <div className="flex items-center gap-4 mb-2">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                <PlusCircle className="" size={20} />
+                            </div>
+                            <h2 className="text-xl font-bold tracking-tight">Sobre a empresa</h2>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Título da Seção</label>
+                                <input
+                                    type="text"
+                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] h-14"
+                                    value={formData.aboutTitle}
+                                    onChange={(e) => setFormData({ ...formData, aboutTitle: e.target.value })}
+                                    placeholder="e.g. Sobre a Studio X"
+                                />
+                            </div>
+
+                            <div className="space-y-3">
+                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Descrição</label>
+                                <textarea
+                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[140px] resize-none py-4 px-6"
+                                    value={formData.aboutDescription}
+                                    onChange={(e) => setFormData({ ...formData, aboutDescription: e.target.value })}
+                                    placeholder="Conte um pouco sobre sua trajetória, expertise e valores..."
                                 />
                             </div>
                         </div>
@@ -291,6 +362,74 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                         </div>
                     </div>
 
+                    {/* Work Process Repeater */}
+                    <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] space-y-8">
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                    <PlusCircle size={20} />
+                                </div>
+                                <h2 className="text-xl font-bold tracking-tight">Processo de trabalho</h2>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={handleAddProcessStep}
+                                className="text-primary hover:text-white flex items-center gap-2 text-sm font-bold transition-colors"
+                            >
+                                <PlusCircle size={16} /> Adicionar Etapa
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6">
+                            {formData.processSteps.map((step: any, index: number) => (
+                                <div key={index} className="relative group p-6 rounded-2xl bg-[#16161a] border border-white/5 hover:border-primary/20 transition-all duration-300">
+                                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                        <div className="md:col-span-4 space-y-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black text-muted uppercase tracking-widest">Título da Etapa</label>
+                                                <input
+                                                    type="text"
+                                                    className="input-base bg-transparent border-white/5 focus:bg-white/5 h-10 text-sm"
+                                                    value={step.title}
+                                                    onChange={(e) => handleProcessStepChange(index, 'title', e.target.value)}
+                                                    placeholder="Design & Prototipagem"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black text-muted uppercase tracking-widest">Ícone (Lucide name)</label>
+                                                <input
+                                                    type="text"
+                                                    className="input-base bg-transparent border-white/5 focus:bg-white/5 h-10 text-sm"
+                                                    value={step.icon}
+                                                    onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
+                                                    placeholder="target, cpu, zap..."
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="md:col-span-8 space-y-2">
+                                            <label className="text-[10px] font-black text-muted uppercase tracking-widest">Descrição detalhada</label>
+                                            <textarea
+                                                className="input-base bg-transparent border-white/5 focus:bg-white/5 min-h-[100px] text-xs py-2 resize-none"
+                                                value={step.description}
+                                                onChange={(e) => handleProcessStepChange(index, 'description', e.target.value)}
+                                                placeholder="Descreva o que acontece nesta fase..."
+                                            />
+                                        </div>
+                                    </div>
+                                    {formData.processSteps.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveProcessStep(index)}
+                                            className="absolute -top-3 -right-3 p-2 bg-[#16161a] border border-white/5 text-muted/30 hover:text-red-500 rounded-xl transition-all shadow-xl opacity-0 group-hover:opacity-100"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Deliverables */}
                     <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] space-y-8">
                         <div className="flex items-center justify-between mb-2">
@@ -335,6 +474,37 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                     )}
                                 </div>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Payment Terms Section */}
+                    <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] space-y-8">
+                        <div className="flex items-center gap-4 mb-2">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                <Check size={20} />
+                            </div>
+                            <h2 className="text-xl font-bold tracking-tight">Termos de pagamento</h2>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Descrição do Pagamento</label>
+                                <textarea
+                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[120px] resize-none py-4 px-6"
+                                    value={formData.paymentTerms}
+                                    onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
+                                    placeholder="Ex: 50% antecipado + 50% na entrega final..."
+                                />
+                            </div>
+                            
+                            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-start gap-3">
+                                <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                                    <span className="text-[10px] font-bold">!</span>
+                                </div>
+                                <p className="text-xs font-medium text-muted/80">
+                                    <span className="text-primary font-bold">Nota:</span> Um selo visual de "50% de entrada obrigatório" será exibido automaticamente na proposta para reforçar os termos padrão.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

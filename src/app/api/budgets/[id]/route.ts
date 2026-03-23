@@ -50,14 +50,19 @@ export async function PATCH(
 
     const {
       projectName,
+      clientName,
       description,
+      aboutTitle,
+      aboutDescription,
       type,
       hourlyRate,
       estimatedHours,
       totalValue,
       deadline,
       deliverables,
+      processSteps,
       strategicPillars,
+      paymentTerms,
     } = data;
 
     // First, check if the budget exists and has a slug
@@ -77,7 +82,10 @@ export async function PATCH(
 
     const updateData: any = {
       projectName,
+      clientName,
       description,
+      aboutTitle,
+      aboutDescription,
       type: budgetType,
       slug: existingBudget.slug || slugify(projectName),
       hourlyRate: hourlyRate
@@ -93,7 +101,9 @@ export async function PATCH(
       totalValue: totalValue ? parseFloat(totalValue) : undefined,
       deadline: deadline ? new Date(deadline) : undefined,
       deliverables,
+      processSteps,
       strategicPillars,
+      paymentTerms,
       updatedAt: new Date(),
     };
 

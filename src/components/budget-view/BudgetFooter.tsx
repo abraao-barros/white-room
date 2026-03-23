@@ -2,10 +2,12 @@ import { Briefcase, User, Mail } from 'lucide-react'
 
 interface BudgetFooterProps {
     budget: any
-    getSetting: (id: string, defaultValue: string) => string
+    settings: Record<string, string>
 }
 
-export function BudgetFooter({ budget, getSetting }: BudgetFooterProps) {
+export function BudgetFooter({ budget, settings }: BudgetFooterProps) {
+    const getSetting = (id: string, defaultValue: string) => settings[id] || defaultValue
+
     return (
         <footer className="pt-24 border-t border-white/5">
             <div className="flex flex-wrap md:flex-row justify-between gap-12">

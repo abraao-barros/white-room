@@ -2,10 +2,12 @@ import { Zap, ShieldCheck, Award } from 'lucide-react'
 
 interface BudgetPillarsProps {
     strategicPillars: any
-    getSetting: (id: string, defaultValue: string) => string
+    settings: Record<string, string>
 }
 
-export function BudgetPillars({ strategicPillars, getSetting }: BudgetPillarsProps) {
+export function BudgetPillars({ strategicPillars, settings }: BudgetPillarsProps) {
+    const getSetting = (id: string, defaultValue: string) => settings[id] || defaultValue
+
     return (
         <section className="mb-32 grid grid-cols-1 md:grid-cols-3 gap-12">
             {[0, 1, 2].map((idx) => {

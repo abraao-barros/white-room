@@ -7,6 +7,7 @@ import {
   jsonb,
   primaryKey,
   unique,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -24,15 +25,22 @@ export const budgets = pgTable("budgets", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   projectName: text("project_name").notNull(),
+  clientName: text("client_name"),
   description: text("description"),
+  aboutTitle: text("about_title"),
+  aboutDescription: text("about_description"),
   type: text("type").default("hourly").notNull(), // 'hourly' or 'fixed'
   hourlyRate: doublePrecision("hourly_rate"),
   estimatedHours: doublePrecision("estimated_hours"),
   totalValue: doublePrecision("total_value").notNull(),
   deadline: timestamp("deadline").notNull(),
   deliverables: jsonb("deliverables").notNull(), // Array of strings
+  processSteps: jsonb("process_steps"), // Array of objects { icon, title, description }
   strategicPillars: jsonb("strategic_pillars"), // Array of objects { title, description }
+  paymentTerms: text("payment_terms"),
   slug: text("slug").unique().notNull(),
+  approved: boolean("approved").default(false).notNull(),
+  approvedAt: timestamp("approved_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

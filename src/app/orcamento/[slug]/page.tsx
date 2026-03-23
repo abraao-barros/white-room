@@ -6,6 +6,8 @@ import { eq } from 'drizzle-orm'
 // Components
 import { BudgetHeader } from '@/components/budget-view/BudgetHeader'
 import { BudgetPillars } from '@/components/budget-view/BudgetPillars'
+import { BudgetAbout } from '@/components/budget-view/BudgetAbout'
+import { BudgetProcessSteps } from '@/components/budget-view/BudgetProcessSteps'
 import { BudgetDeliverables } from '@/components/budget-view/BudgetDeliverables'
 import { BudgetInvestment } from '@/components/budget-view/BudgetInvestment'
 import { BudgetFooter } from '@/components/budget-view/BudgetFooter'
@@ -79,31 +81,43 @@ export default async function PublicBudgetPage({ params }: { params: Promise<{ s
 
             <main className="container mx-auto px-6 py-20 lg:py-32 max-w-6xl">
                 <BudgetHeader 
-                    getSetting={getSetting} 
+                    settings={settings} 
                     projectName={budget.projectName || ''} 
+                    clientName={budget.clientName || undefined}
                     description={budget.description || ''} 
                 />
 
                 <BudgetPillars 
                     strategicPillars={budget.strategicPillars} 
-                    getSetting={getSetting} 
+                    settings={settings} 
                 />
 
-                <section className="grid grid-cols-1 lg:grid-cols-12 gap-20 mb-32 items-start">
+                <BudgetAbout 
+                    title={budget.aboutTitle || ''} 
+                    description={budget.aboutDescription || ''} 
+                    settings={settings}
+                />
+
+                <BudgetProcessSteps 
+                    steps={(budget.processSteps as any[]) || []} 
+                    settings={settings}
+                />
+
+                <div className="space-y-32 mb-32">
                     <BudgetDeliverables 
                         deliverables={deliverables} 
-                        getSetting={getSetting} 
+                        settings={settings} 
                     />
                     
                     <BudgetInvestment 
                         budget={budget} 
-                        getSetting={getSetting} 
+                        settings={settings} 
                     />
-                </section>
+                </div>
 
                 <BudgetFooter 
                     budget={budget} 
-                    getSetting={getSetting} 
+                    settings={settings} 
                 />
             </main>
         </div>
