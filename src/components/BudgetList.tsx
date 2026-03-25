@@ -84,7 +84,7 @@ export default function BudgetList({ budgets: initialBudgets }: BudgetListProps)
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                     {filteredBudgets.map((budget) => (
-                        <div key={budget.id} className="card-base group flex flex-col justify-between !bg-surface/40 hover:!bg-surface/60 border-white/5 hover:border-primary/40 animate-in fade-in zoom-in duration-500">
+                        <div key={budget.id} className="card-base group flex flex-col justify-between hover:!bg-gradient-to-r from-primary/20 to-primary/0 border-white/5 hover:border-primary/40 transition-all animate-in fade-in zoom-in duration-500">
                             <div className="space-y-6">
                                 <div className="flex items-start justify-between gap-4">
                                     <h2 className="text-xl font-bold tracking-tight line-clamp-1">{budget.projectName}</h2>
@@ -106,7 +106,7 @@ export default function BudgetList({ budgets: initialBudgets }: BudgetListProps)
                                         ) : (
                                             <>
                                                 <Clock size={12} />
-                                                <span>{budget.estimatedHours}h esforço</span>
+                                                <span>{budget.estimatedHours}h de esforço</span>
                                             </>
                                         )}
                                     </div>

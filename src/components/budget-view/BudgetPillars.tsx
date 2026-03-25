@@ -25,7 +25,7 @@ export function BudgetPillars({ strategicPillars, settings }: BudgetPillarsProps
 
                 return (
                     <div key={idx} className="space-y-6 group card-base rounded-2xl p-8">
-                        <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all duration-500 ${idx === 0 ? 'bg-primary/10 border border-primary/20 text-primary group-hover:bg-primary group-hover:text-white' : 'bg-white/5 border border-white/10 text-white group-hover:bg-white group-hover:text-background'}`}>
+                        <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all duration-500 ${idx === 0 ? 'bg-primary/10 border border-primary/20 text-primary group-hover:bg-inherit group-hover:text-white' : 'bg-white/5 border border-white/10 text-white group-hover:bg-white group-hover:text-background'}`}>
                             {defaultIcons[idx]}
                         </div>
                         <h3 className="text-2xl font-bold">{title}</h3>

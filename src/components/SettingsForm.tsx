@@ -20,6 +20,9 @@ interface SettingGroup {
 
 import { Save, ChevronLeft, Loader2, Check, Layout, Target, CreditCard, Briefcase, Palette } from 'lucide-react'
 import Link from 'next/link'
+import { Input } from '@/components/ui/Input'
+import { Textarea } from '@/components/ui/Textarea'
+import { Label } from '@/components/ui/Label'
 
 const SETTING_GROUPS: SettingGroup[] = [
     {
@@ -148,12 +151,13 @@ export default function SettingsForm() {
     }
 
     return (
-        <form onSubmit={handleSave} className="p-10 max-w-[1200px] mx-auto animate-in fade-in duration-700">
+        <form onSubmit={handleSave} className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
             {/* Page Header */}
             <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
                 <div className="space-y-1">
-                    <Link href="/dashboard" className="text-muted text-sm flex items-center gap-1 hover:text-white transition-colors mb-2">
-                        <ChevronLeft size={16} /> Voltar ao Dashboard
+                    <Link href="/dashboard" className="inline-flex items-center gap-2 text-muted hover:text-white transition-colors mb-10 group">
+                        <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                        <span className="text-xs font-black uppercase tracking-widest">Voltar para o Dashboard</span>
                     </Link>
                     <h1 className="text-4xl font-black tracking-tight">Configurações Gerais</h1>
                     <p className="text-muted font-medium">Personalize os textos e o tema visual das suas propostas públicas.</p>
@@ -187,16 +191,16 @@ export default function SettingsForm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {group.fields.map((field) => (
                                 <div key={field.id} className={`space-y-3 ${field.type === 'textarea' ? 'md:col-span-2' : ''}`}>
-                                    <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">
+                                    <Label>
                                         {field.label}
-                                    </label>
-                                    
+                                    </Label>
+
                                     {field.type === 'textarea' ? (
-                                        <textarea
+                                        <Textarea
                                             value={settings[field.id] || ''}
                                             placeholder={field.placeholder}
                                             onChange={(e) => handleChange(field.id, e.target.value)}
-                                            className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[120px] resize-y py-4 px-6"
+                                            className="min-h-[120px]"
                                         />
                                     ) : field.type === 'color' ? (
                                         <div className="flex items-center gap-4 bg-[#16161a] rounded-2xl border border-white/5 p-3 pr-6">
@@ -214,12 +218,11 @@ export default function SettingsForm() {
                                             />
                                         </div>
                                     ) : (
-                                        <input
+                                        <Input
                                             type="text"
                                             value={settings[field.id] || ''}
                                             placeholder={field.placeholder}
                                             onChange={(e) => handleChange(field.id, e.target.value)}
-                                            className="input-base bg-[#16161a] border-white/5 h-14 px-6"
                                         />
                                     )}
                                 </div>

@@ -11,11 +11,7 @@ export default async function SettingsPage() {
     }
 
     return (
-        <div className="p-10 max-w-5xl mx-auto animate-in fade-in duration-700">
-            <header className="mb-12">
-                <h1 className="text-4xl font-black tracking-tight mb-2">Configurações do Sistema</h1>
-                <p className="text-muted font-medium opacity-70 italic">Personalize textos globais e branding para todas as suas propostas de orçamento.</p>
-            </header>
+        <div className="p-10 max-w-[1600px] mx-auto animate-in fade-in duration-700">
             <SettingsForm />
         </div>
     )

@@ -5,6 +5,32 @@ import { useRouter } from 'next/navigation'
 import { Plus, Trash2, Target, Clock, PlusCircle, Briefcase, Check, ExternalLink, ArrowRight } from 'lucide-react'
 import Tabs from '@/components/Tabs'
 import Link from 'next/link'
+import { Input } from '@/components/ui/Input'
+import { Textarea } from '@/components/ui/Textarea'
+import { Label } from '@/components/ui/Label'
+import { Select } from '@/components/ui/Select'
+
+const AVAILABLE_ICONS = [
+    { value: 'Target', label: 'Alvo / Objetivo (Target)' },
+    { value: 'Search', label: 'Pesquisa / Diagnóstico (Search)' },
+    { value: 'PenTool', label: 'Design / Criação (PenTool)' },
+    { value: 'Lightbulb', label: 'Ideia / Referências (Lightbulb)' },
+    { value: 'Monitor', label: 'Telas / Protótipo (Monitor)' },
+    { value: 'Layout', label: 'Interface / Layout (Layout)' },
+    { value: 'Code', label: 'Desenvolvimento (Code)' },
+    { value: 'Cpu', label: 'Engenharia / Sistema (Cpu)' },
+    { value: 'Smartphone', label: 'Mobile / App (Smartphone)' },
+    { value: 'MessageSquare', label: 'Briefing / Reunião (MessageSquare)' },
+    { value: 'Users', label: 'Público / Testes (Users)' },
+    { value: 'Settings', label: 'Configuração / Ajustes (Settings)' },
+    { value: 'Zap', label: 'Performance / Otimização (Zap)' },
+    { value: 'Rocket', label: 'Lançamento / Entrega (Rocket)' },
+    { value: 'CheckCircle', label: 'Aprovação / Qualidade (CheckCircle)' },
+    { value: 'BarChart', label: 'Métricas / Resultados (BarChart)' },
+    { value: 'Briefcase', label: 'Comercial / Contrato (Briefcase)' },
+    { value: 'Palette', label: 'Marcas / Cores (Palette)' },
+    { value: 'Globe', label: 'Web / Internacional (Globe)' },
+]
 
 export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [formData, setFormData] = useState({
@@ -20,7 +46,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         deadline: initialData?.deadline ? new Date(initialData.deadline).toISOString().split('T')[0] : '',
         deliverables: initialData?.deliverables || [''],
         processSteps: initialData?.processSteps || [
-            { icon: 'target', title: '', description: '' }
+            { icon: 'Target', title: '', description: '' }
         ],
         strategicPillars: initialData?.strategicPillars || [
             { title: '', description: '' },
@@ -51,7 +77,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
     }
 
     const handleAddProcessStep = () => {
-        setFormData({ ...formData, processSteps: [...formData.processSteps, { icon: 'target', title: '', description: '' }] })
+        setFormData({ ...formData, processSteps: [...formData.processSteps, { icon: 'Target', title: '', description: '' }] })
     }
 
     const handleRemoveProcessStep = (index: number) => {
@@ -129,7 +155,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         { id: 'fixed', label: 'Escopo Fechado', icon: <Target size={16} /> }
     ]
     return (
-        <form onSubmit={handleSubmit} className="p-10 max-w-[1600px] mx-auto animate-in fade-in duration-700">
+        <form onSubmit={handleSubmit} className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
             {/* Page Header */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
                 <div>
@@ -169,7 +195,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                 <div className="lg:col-span-8 space-y-8">
 
                     {/* General Information */}
-                    <div className="card-base bg-[#0f0f11] border-white/5 p-8 rounded-[32px] space-y-8">
+                    <div className="card-base border-white/5 p-8 rounded-[32px] space-y-8">
                         <div className="flex items-center gap-4 mb-2">
                             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                                 <PlusCircle className="rotate-45" size={20} />
@@ -179,10 +205,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
 
                         <div className="space-y-6">
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Nome do projeto</label>
-                                <input
+                                <Label>Nome do projeto</Label>
+                                <Input
                                     type="text"
-                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] h-14"
                                     required
                                     value={formData.projectName}
                                     onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
@@ -191,10 +216,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Nome do cliente</label>
-                                <input
+                                <Label>Nome do cliente</Label>
+                                <Input
                                     type="text"
-                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] h-14"
                                     value={formData.clientName}
                                     onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                                     placeholder="e.g. Acme Corp"
@@ -202,9 +226,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Descrição</label>
-                                <textarea
-                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[160px] resize-none py-4"
+                                <Label>Descrição</Label>
+                                <Textarea
+                                    className="min-h-[160px] resize-none"
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Breve descrição do escopo do projeto..."
@@ -224,10 +248,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
 
                         <div className="space-y-6">
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Título da Seção</label>
-                                <input
+                                <Label>Título da Seção</Label>
+                                <Input
                                     type="text"
-                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] h-14"
                                     value={formData.aboutTitle}
                                     onChange={(e) => setFormData({ ...formData, aboutTitle: e.target.value })}
                                     placeholder="e.g. Sobre a Studio X"
@@ -235,9 +258,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Descrição</label>
-                                <textarea
-                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[140px] resize-none py-4 px-6"
+                                <Label>Descrição</Label>
+                                <Textarea
+                                    className="min-h-[140px] resize-none"
                                     value={formData.aboutDescription}
                                     onChange={(e) => setFormData({ ...formData, aboutDescription: e.target.value })}
                                     placeholder="Conte um pouco sobre sua trajetória, expertise e valores..."
@@ -268,10 +291,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             {formData.type === 'hourly' ? (
                                 <>
                                     <div className="space-y-3">
-                                        <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Valor da hora (R$)</label>
-                                        <input
+                                        <Label>Valor da hora (R$)</Label>
+                                        <Input
                                             type="number"
-                                            className="input-base bg-[#16161a] border-white/5 h-14"
                                             required
                                             value={formData.hourlyRate}
                                             onChange={(e) => setFormData({ ...formData, hourlyRate: e.target.value })}
@@ -280,10 +302,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                     </div>
 
                                     <div className="space-y-3">
-                                        <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Horas estimadas</label>
-                                        <input
+                                        <Label>Horas estimadas</Label>
+                                        <Input
                                             type="number"
-                                            className="input-base bg-[#16161a] border-white/5 h-14"
                                             required
                                             value={formData.estimatedHours}
                                             onChange={(e) => setFormData({ ...formData, estimatedHours: e.target.value })}
@@ -293,10 +314,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                 </>
                             ) : (
                                 <div className="space-y-3">
-                                    <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Valor total (R$)</label>
-                                    <input
+                                    <Label>Valor total (R$)</Label>
+                                    <Input
                                         type="number"
-                                        className="input-base bg-[#16161a] border-white/5 h-14"
                                         required
                                         value={formData.fixedTotal}
                                         onChange={(e) => setFormData({ ...formData, fixedTotal: e.target.value })}
@@ -306,10 +326,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             )}
 
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Prazo da proposta</label>
-                                <input
+                                <Label>Prazo da proposta</Label>
+                                <Input
                                     type="date"
-                                    className="input-base bg-[#16161a] border-white/5 h-14"
                                     required
                                     value={formData.deadline}
                                     onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
@@ -331,10 +350,10 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             {formData.strategicPillars.map((pillar: any, index: number) => (
                                 <div key={index} className="space-y-4 p-6 rounded-2xl bg-[#16161a] border border-white/5 hover:border-primary/20 transition-all duration-300">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-muted uppercase tracking-widest">Título</label>
-                                        <input
+                                        <Label className="text-[10px] ml-0">Título</Label>
+                                        <Input
                                             type="text"
-                                            className="input-base bg-transparent border-white/5 focus:bg-white/5 h-10 text-sm"
+                                            className="input-base h-10 text-sm"
                                             value={pillar.title}
                                             onChange={(e) => {
                                                 const newPillars = [...formData.strategicPillars];
@@ -345,9 +364,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-muted uppercase tracking-widest">Descrição</label>
-                                        <textarea
-                                            className="input-base bg-transparent border-white/5 focus:bg-white/5 min-h-[80px] text-xs py-2 resize-none"
+                                        <Label className="text-[10px] ml-0">Descrição</Label>
+                                        <Textarea
+                                            className="input-base min-h-[80px] text-xs py-2 resize-none"
                                             value={pillar.description}
                                             onChange={(e) => {
                                                 const newPillars = [...formData.strategicPillars];
@@ -386,30 +405,35 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div className="md:col-span-4 space-y-4">
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-muted uppercase tracking-widest">Título da Etapa</label>
-                                                <input
+                                                <Label className="text-[10px] ml-0">Título da Etapa</Label>
+                                                <Input
                                                     type="text"
-                                                    className="input-base bg-transparent border-white/5 focus:bg-white/5 h-10 text-sm"
+                                                    className="input-base h-10 text-sm"
                                                     value={step.title}
                                                     onChange={(e) => handleProcessStepChange(index, 'title', e.target.value)}
                                                     placeholder="Design & Prototipagem"
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-muted uppercase tracking-widest">Ícone (Lucide name)</label>
-                                                <input
-                                                    type="text"
-                                                    className="input-base bg-transparent border-white/5 focus:bg-white/5 h-10 text-sm"
-                                                    value={step.icon}
-                                                    onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
-                                                    placeholder="target, cpu, zap..."
-                                                />
+                                                <Label className="text-[10px] ml-0">Ícone Visual</Label>
+                                                <Select
+                                                        className="h-10 text-sm"
+                                                        value={step.icon}
+                                                        onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
+                                                >
+                                                    <option value="" disabled className="bg-background text-muted">Selecione um ícone...</option>
+                                                    {AVAILABLE_ICONS.map(icon => (
+                                                        <option key={icon.value} value={icon.value} className="bg-[#16161a] text-white">
+                                                            {icon.label}
+                                                        </option>
+                                                    ))}
+                                                </Select>
                                             </div>
                                         </div>
                                         <div className="md:col-span-8 space-y-2">
-                                            <label className="text-[10px] font-black text-muted uppercase tracking-widest">Descrição detalhada</label>
-                                            <textarea
-                                                className="input-base bg-transparent border-white/5 focus:bg-white/5 min-h-[100px] text-xs py-2 resize-none"
+                                            <Label className="text-[10px] ml-0">Descrição detalhada</Label>
+                                            <Textarea
+                                                className="input-base min-h-[100px] text-xs py-2 resize-none"
                                                 value={step.description}
                                                 onChange={(e) => handleProcessStepChange(index, 'description', e.target.value)}
                                                 placeholder="Descreva o que acontece nesta fase..."
@@ -451,9 +475,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                         <div className="space-y-3">
                             {formData.deliverables.map((deliverable: string, index: number) => (
                                 <div key={index} className="group relative">
-                                    <input
+                                    <Input
                                         type="text"
-                                        className="input-base bg-[#16161a] border-white/5 focus:border-primary/50 h-14 pl-12 pr-12"
+                                        className="focus:border-primary/50 pl-12 pr-12"
                                         value={deliverable}
                                         onChange={(e) => handleDeliverableChange(index, e.target.value)}
                                         placeholder="Adicionar entregável..."
@@ -488,16 +512,16 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
 
                         <div className="space-y-6">
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-muted uppercase tracking-widest ml-1">Descrição do Pagamento</label>
-                                <textarea
-                                    className="input-base bg-[#16161a] border-white/5 focus:bg-[#1a1a20] min-h-[120px] resize-none py-4 px-6"
+                                <Label>Descrição do Pagamento</Label>
+                                <Textarea
+                                    className="min-h-[120px] resize-none"
                                     value={formData.paymentTerms}
                                     onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
                                     placeholder="Ex: 50% antecipado + 50% na entrega final..."
                                 />
                             </div>
                             
-                            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-start gap-3">
+                            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-center gap-3">
                                 <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
                                     <span className="text-[10px] font-bold">!</span>
                                 </div>

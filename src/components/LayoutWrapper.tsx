@@ -4,15 +4,15 @@ import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import TopNav from '@/components/TopNav'
 
-export default function LayoutWrapper({ 
-  children, 
-  user 
-}: { 
+export default function LayoutWrapper({
+  children,
+  user
+}: {
   children: React.ReactNode,
   user: any
 }) {
   const pathname = usePathname()
-  
+
   const isPublic = pathname.startsWith('/orcamento/') || pathname.startsWith('/auth/')
 
   if (isPublic) {

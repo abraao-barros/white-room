@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: #0a0a0a;
+    --background: #141022;
     --foreground: #ffffff;
     --primary: #9b87f5;
   }
@@ -25,11 +25,11 @@
   }
 
   .input-base {
-    @apply w-full px-4 py-3 rounded-xl bg-surface border border-surface-border text-white transition-all focus:outline-none focus:border-primary placeholder:text-muted/50;
+    @apply w-full px-4 py-3 rounded-xl bg-[#1E293B70] border border-surface-border text-white transition-all focus:outline-none focus:border-primary placeholder:text-muted/50;
   }
 
   .card-base {
-    @apply p-6 rounded-2xl bg-surface border-2 border-surface-border transition-all hover:border-primary/50;
+    @apply p-6 rounded-2xl !bg-[#0F172A50] border-2 border-surface-border transition-all hover:border-primary/50;
   }
 
   .glass-effect {

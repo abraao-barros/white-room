@@ -16,7 +16,7 @@ export default async function StatusPage() {
     return (
         <div className="p-10 max-w-[1600px] mx-auto animate-in fade-in duration-700">
             <header className="mb-12">
-                <h1 className="text-4xl lg:text-5xl font-black mb-3 tracking-tight">Status de Orçamentos</h1>
+                <h1 className="text-4xl font-black mb-3 tracking-tight">Status de Orçamentos</h1>
                 <p className="text-muted text-lg italic tracking-tight font-medium opacity-70">
                     Acompanhe o progresso das suas propostas comerciais.
                 </p>
@@ -24,7 +24,7 @@ export default async function StatusPage() {
 
             <div className="grid grid-cols-1 gap-6">
                 {userBudgets.length === 0 ? (
-                    <div className="card-base bg-[#0f0f11] border-white/5 border-dashed border-2 text-center py-32 rounded-[40px] flex flex-col items-center gap-8">
+                    <div className="card-base border-white/5 border-dashed border-2 text-center py-32 rounded-2xl flex flex-col items-center gap-8">
                         <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center text-muted/30">
                             <Briefcase size={48} />
                         </div>
@@ -35,9 +35,9 @@ export default async function StatusPage() {
                     </div>
                 ) : (
                     userBudgets.map((budget) => (
-                        <div key={budget.id} className="card-base bg-[#0f0f11] border-white/5 hover:border-primary/20 transition-all p-8 rounded-[32px] group relative overflow-hidden">
+                        <div key={budget.id} className={`card-base ${budget.approved ? '!bg-gradient-to-r from-[#0F172A00] to-green-500/5' : ''} border-white/5 hover:border-primary/20 transition-all p-8 rounded-2xl group relative overflow-hidden`}>
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            
+
                             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
                                 <div className="space-y-4 flex-1">
                                     <div className="flex items-center gap-3">
@@ -46,9 +46,9 @@ export default async function StatusPage() {
                                             {budget.approved ? 'Aprovado' : 'Aguardando Aprovação'}
                                         </span>
                                     </div>
-                                    
+
                                     <div>
-                                        <h2 className="text-2xl font-black tracking-tight text-white group-hover:text-primary transition-colors mb-1">
+                                        <h2 className="text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors mb-1">
                                             {budget.projectName}
                                         </h2>
                                         <div className="flex items-center gap-4 text-sm font-bold text-muted/60">
@@ -95,15 +95,15 @@ export default async function StatusPage() {
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    <Link 
-                                        href={`/orcamento/${budget.slug}`} 
+                                    <Link
+                                        href={`/orcamento/${budget.slug}`}
                                         target="_blank"
                                         className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-muted hover:bg-white/10 hover:text-white transition-all shadow-lg"
                                         title="Ver Proposta Pública"
                                     >
                                         <ExternalLink size={20} />
                                     </Link>
-                                    <Link 
+                                    <Link
                                         href={`/dashboard/edit/${budget.id}`}
                                         className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all shadow-lg shadow-primary/10"
                                         title="Editar Proposta"
