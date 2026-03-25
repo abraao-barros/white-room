@@ -417,9 +417,9 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                             <div className="space-y-2">
                                                 <Label className="text-[10px] ml-0">Ícone Visual</Label>
                                                 <Select
-                                                        className="h-10 text-sm"
-                                                        value={step.icon}
-                                                        onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
+                                                    className="text-sm"
+                                                    value={step.icon}
+                                                    onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
                                                 >
                                                     <option value="" disabled className="bg-background text-muted">Selecione um ícone...</option>
                                                     {AVAILABLE_ICONS.map(icon => (
@@ -520,7 +520,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                     placeholder="Ex: 50% antecipado + 50% na entrega final..."
                                 />
                             </div>
-                            
+
                             <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-center gap-3">
                                 <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
                                     <span className="text-[10px] font-bold">!</span>
