@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     // 1. Authenticate Session
     const session = await getSession();
     if (!session || !session.userId) {
+      console.warn("API Upload - Unauthorized: No session or userId found in production.");
       return NextResponse.json({ error: "Não autorizado. Confirme o login." }, { status: 401 });
     }
 
@@ -58,7 +59,14 @@ export async function POST(request: Request) {
       objectKey
     });
   } catch (error: any) {
-    console.error("Presigned URL Generation Error:", error);
-    return NextResponse.json({ error: "Falha na geração da autorização de Upload." }, { status: 500 });
+    console.error("Presigned URL Generation Error (PROD):", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    return NextResponse.json({ 
+      error: "Falha na geração da autorização de Upload.",
+      details: error.message 
+    }, { status: 500 });
   }
 }
