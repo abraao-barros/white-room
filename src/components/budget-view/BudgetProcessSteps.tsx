@@ -5,6 +5,7 @@ interface ProcessStep {
     icon: string
     title: string
     description: string
+    imageUrl?: string
 }
 
 interface BudgetProcessStepsProps {
@@ -74,8 +75,14 @@ export function BudgetProcessSteps({ steps, settings }: BudgetProcessStepsProps)
                             {/* Image Placeholder Frame */}
                             <div className="hidden md:flex w-1/2 p-4 md:p-6 pl-0">
                                 <div className="w-full h-full min-h-[250px] rounded-[16px] bg-black/40 border border-white/5 relative overflow-hidden flex items-center justify-center shadow-inner group-hover:border-primary/20 transition-colors duration-500">
-                                    <Icon size={140} className="text-primary opacity-5 absolute group-hover:scale-110 group-hover:opacity-10 transition-all duration-700" strokeWidth={0.5} />
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-[#0f0f11]/80 to-transparent pointer-events-none"></div>
+                                    {step.imageUrl ? (
+                                        <img src={step.imageUrl} alt={step.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                                    ) : (
+                                        <>
+                                            <Icon size={140} className="text-primary opacity-5 absolute group-hover:scale-110 group-hover:opacity-10 transition-all duration-700" strokeWidth={0.5} />
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-[#0f0f11]/80 to-transparent pointer-events-none"></div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>

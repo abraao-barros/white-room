@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Trash2, Target, Clock, PlusCircle, Briefcase, Check, ExternalLink, ArrowRight } from 'lucide-react'
+import { Plus, Trash2, Target, Clock, PlusCircle, Briefcase, Check, ExternalLink, ArrowRight, Loader2, Image as ImageIcon } from 'lucide-react'
 import Tabs from '@/components/Tabs'
 import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/Label'
 import { Select } from '@/components/ui/Select'
 
 import { AVAILABLE_ICONS } from '@/components/_constants/available_icons'
+import { uploadToR2 } from '@/lib/upload'
 
 export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [formData, setFormData] = useState({
@@ -40,6 +41,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [showSuccess, setShowSuccess] = useState(false)
     const [error, setError] = useState('')
     const [scrolled, setScrolled] = useState(false)
+    const [uploadingStep, setUploadingStep] = useState<number | null>(null)
     const router = useRouter()
 
     useEffect(() => {
@@ -78,6 +80,22 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
         const newSteps = [...formData.processSteps]
         newSteps[index] = { ...newSteps[index], [field]: value }
         setFormData({ ...formData, processSteps: newSteps })
+    }
+
+    const handleImageUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        try {
+            setUploadingStep(index)
+            const publicUrl = await uploadToR2(file)
+            handleProcessStepChange(index, 'imageUrl', publicUrl)
+        } catch (err) {
+            console.error('Upload failed:', err)
+            alert('Falha ao fazer upload da imagem.')
+        } finally {
+            setUploadingStep(null)
+        }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -406,7 +424,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                             <div className="space-y-2">
                                                 <Label className="text-[10px] ml-0">Ícone Visual</Label>
                                                 <Select
-                                                    className="text-sm"
+                                                    className="h-10 text-sm"
                                                     value={step.icon}
                                                     onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
                                                 >
@@ -417,6 +435,37 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                                         </option>
                                                     ))}
                                                 </Select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="text-[10px] ml-0">Capa do Processo (Opcional)</Label>
+                                                <div className="relative">
+                                                     <input 
+                                                          type="file" 
+                                                          accept="image/*"
+                                                          className="hidden" 
+                                                          id={`process-image-${index}`}
+                                                          onChange={(e) => handleImageUpload(index, e)}
+                                                          disabled={uploadingStep === index}
+                                                     />
+                                                     <label 
+                                                         htmlFor={`process-image-${index}`}
+                                                         className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl border border-dashed border-white/20 bg-white/5 hover:bg-white/10 text-xs font-bold cursor-pointer transition-colors w-full overflow-hidden"
+                                                     >
+                                                         {uploadingStep === index ? (
+                                                             <Loader2 size={14} className="animate-spin text-primary" />
+                                                         ) : step.imageUrl ? (
+                                                             <>
+                                                                <Check size={14} className="text-green-500" />
+                                                                <span className="truncate">{step.imageUrl.split('/').pop()}</span>
+                                                             </>
+                                                         ) : (
+                                                             <>
+                                                                <ImageIcon size={14} className="text-muted" />
+                                                                <span className="text-muted group-hover:text-white transition-colors">Anexar imagem...</span>
+                                                             </>
+                                                         )}
+                                                     </label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="md:col-span-8 space-y-2">
