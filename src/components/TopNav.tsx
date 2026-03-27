@@ -29,8 +29,8 @@ export default function TopNav({ user }: { user?: any }) {
                 {breadcrumbs.map((crumb, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                         <ChevronRight size={14} className="text-white/10" />
-                        <Link 
-                            href={crumb.href} 
+                        <Link
+                            href={crumb.href}
                             className={`${crumb.isLast ? 'text-white' : 'hover:text-white transition-colors'}`}
                             style={{ opacity: crumb.isLast ? 1 : 0.6 }}
                         >
@@ -45,10 +45,10 @@ export default function TopNav({ user }: { user?: any }) {
                 {/* Search */}
                 <div className="relative group hidden lg:block">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within:text-primary transition-colors" size={18} />
-                    <input 
-                        type="search" 
-                        placeholder="Search..." 
-                        className="bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-2.5 w-64 text-sm focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all outline-none" 
+                    <input
+                        type="search"
+                        placeholder="O que você procura?"
+                        className="bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-2.5 w-64 text-sm focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all outline-none"
                     />
                 </div>
 

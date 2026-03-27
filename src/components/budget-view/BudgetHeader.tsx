@@ -1,4 +1,4 @@
-import { Zap, ShieldCheck, Award } from 'lucide-react'
+import { Zap } from 'lucide-react'
 
 interface BudgetHeaderProps {
     settings: Record<string, string>
@@ -20,14 +20,14 @@ export function BudgetHeader({ settings, projectName, clientName, description }:
                     </span>
                 </div>
                 {clientName && (
-                    <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-muted/60 flex items-center gap-2 self-start sm:self-auto">
+                    <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/5 text-[14px] font-black uppercase tracking-widest text-muted/60 flex items-center gap-2 self-start sm:self-auto">
                         <Zap size={10} className="text-primary" />
                         Para: <span className="text-white">{clientName}</span>
                     </div>
                 )}
             </div>
 
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-tight md:leading-[1.1] bg-gradient-to-br from-white via-white to-white/40 bg-clip-text text-transparent max-w-5xl">
+            <h1 className="text-5xl md:text-8xl overflow-visible font-black bg-gradient-to-br from-white via-white to-white/40 bg-clip-text text-transparent max-w-5xl">
                 {projectName}
             </h1>
             <p className="text-xl md:text-3xl text-muted max-w-4xl leading-relaxed font-light opacity-80">

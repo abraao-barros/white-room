@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Trash2, Target, Clock, PlusCircle, Briefcase, Check, ExternalLink, ArrowRight } from 'lucide-react'
 import Tabs from '@/components/Tabs'
@@ -10,27 +10,7 @@ import { Textarea } from '@/components/ui/Textarea'
 import { Label } from '@/components/ui/Label'
 import { Select } from '@/components/ui/Select'
 
-const AVAILABLE_ICONS = [
-    { value: 'Target', label: 'Alvo / Objetivo (Target)' },
-    { value: 'Search', label: 'Pesquisa / Diagnóstico (Search)' },
-    { value: 'PenTool', label: 'Design / Criação (PenTool)' },
-    { value: 'Lightbulb', label: 'Ideia / Referências (Lightbulb)' },
-    { value: 'Monitor', label: 'Telas / Protótipo (Monitor)' },
-    { value: 'Layout', label: 'Interface / Layout (Layout)' },
-    { value: 'Code', label: 'Desenvolvimento (Code)' },
-    { value: 'Cpu', label: 'Engenharia / Sistema (Cpu)' },
-    { value: 'Smartphone', label: 'Mobile / App (Smartphone)' },
-    { value: 'MessageSquare', label: 'Briefing / Reunião (MessageSquare)' },
-    { value: 'Users', label: 'Público / Testes (Users)' },
-    { value: 'Settings', label: 'Configuração / Ajustes (Settings)' },
-    { value: 'Zap', label: 'Performance / Otimização (Zap)' },
-    { value: 'Rocket', label: 'Lançamento / Entrega (Rocket)' },
-    { value: 'CheckCircle', label: 'Aprovação / Qualidade (CheckCircle)' },
-    { value: 'BarChart', label: 'Métricas / Resultados (BarChart)' },
-    { value: 'Briefcase', label: 'Comercial / Contrato (Briefcase)' },
-    { value: 'Palette', label: 'Marcas / Cores (Palette)' },
-    { value: 'Globe', label: 'Web / Internacional (Globe)' },
-]
+import { AVAILABLE_ICONS } from '@/components/_constants/available_icons'
 
 export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [formData, setFormData] = useState({
@@ -59,7 +39,16 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [savedBudget, setSavedBudget] = useState<any>(null)
     const [showSuccess, setShowSuccess] = useState(false)
     const [error, setError] = useState('')
+    const [scrolled, setScrolled] = useState(false)
     const router = useRouter()
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 300)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
     const handleAddDeliverable = () => {
         setFormData({ ...formData, deliverables: [...formData.deliverables, ''] })
@@ -577,6 +566,22 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                 <p className="text-xs font-medium text-muted/80 leading-relaxed">A página pública incluirá a marca da sua empresa e os termos de pagamento.</p>
                             </li>
                         </ul>
+                    </div>
+                    
+                    {/* Action Sticky Button */}
+                    <div className={`transition-all duration-500 ease-out ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`w-full btn-primary h-14 px-10 shadow-2xl flex items-center justify-center gap-3 transition-all duration-500 rounded-2xl ${showSuccess ? 'bg-green-600 shadow-green-500/20' : 'shadow-primary/20 hover:-translate-y-1'}`}
+                        >
+                            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : showSuccess ? (
+                                <Check size={20} className="animate-in zoom-in" />
+                            ) : null}
+                            <span className="font-bold text-sm tracking-wide">{loading ? 'Salvando...' : showSuccess ? 'Orçamento Salvo!' : (initialData ? 'Atualizar Orçamento' : 'Salvar Orçamento')}</span>
+                        </button>
                     </div>
                 </div>
             </div>
