@@ -65,8 +65,7 @@ export async function POST(request: Request) {
       stack: error.stack
     });
     return NextResponse.json({ 
-      error: "Falha na geração da autorização de Upload.",
-      details: error.message 
+      error: "Falha na geração da autorização de Upload."
     }, { status: 500 });
   }
 }
