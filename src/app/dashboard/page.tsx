@@ -8,6 +8,8 @@ import { raleway } from '@/lib/fonts'
 
 import BudgetList from '@/components/BudgetList'
 
+import { PageHeader } from '@/components/dashboard/PageHeader'
+
 export default async function DashboardPage() {
     const session = await getSession()
 
@@ -23,17 +25,19 @@ export default async function DashboardPage() {
     return (
         <div className="p-10 max-w-[1600px] mx-auto animate-in fade-in duration-700">
             {/* Welcome & Stats */}
-            <header className={`${raleway.className} flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16`}>
-                <div>
-                    <h1 className="text-4xl font-black mb-3 tracking-tight">Dashboard</h1>
-                    <p className="text-muted text-lg italic tracking-tight font-medium opacity-70">
+            <PageHeader
+                title="Dashboard"
+                description={(
+                    <>
                         Bem-vindo, <span className="font-bold text-primary">{session.name.split(' ')[0]}</span>. Aqui está o resumo dos seus orçamentos.
-                    </p>
-                </div>
-                <Link href="/dashboard/new" className="btn-primary h-14 px-8 shadow-xl shadow-primary/20 flex items-center gap-2">
-                    <Plus size={20} /> Novo Orçamento
-                </Link>
-            </header>
+                    </>
+                )}
+                actions={(
+                    <Link href="/dashboard/new" className="btn-primary h-14 px-8 shadow-xl shadow-primary/20 flex items-center gap-2">
+                        <Plus size={20} /> Novo Orçamento
+                    </Link>
+                )}
+            />
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">

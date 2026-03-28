@@ -23,6 +23,7 @@ import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Label } from '@/components/ui/Label'
+import { PageHeader } from './dashboard/PageHeader'
 
 const SETTING_GROUPS: SettingGroup[] = [
     {
@@ -153,17 +154,14 @@ export default function SettingsForm() {
     return (
         <form onSubmit={handleSave} className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
             {/* Page Header */}
-            <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
-                <div className="space-y-1">
-                    <Link href="/dashboard" className="inline-flex items-center gap-2 text-muted hover:text-white transition-colors mb-10 group">
-                        <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-xs font-black uppercase tracking-widest">Voltar para o Dashboard</span>
-                    </Link>
-                    <h1 className="text-4xl font-black tracking-tight">Configurações Gerais</h1>
-                    <p className="text-muted font-medium">Personalize os textos e o tema visual das suas propostas públicas.</p>
-                </div>
-
-                <div className="flex gap-4">
+            <PageHeader
+                backLink={{
+                    href: '/dashboard',
+                    label: 'Voltar para o Dashboard'
+                }}
+                title="Configurações Gerais"
+                description="Personalize os textos e o tema visual das suas propostas públicas."
+                actions={
                     <button
                         type="submit"
                         disabled={isSaving}
@@ -172,8 +170,8 @@ export default function SettingsForm() {
                         {isSaving ? <Loader2 className="animate-spin" size={18} /> : saveSuccess ? <Check size={18} /> : <Save size={18} />}
                         {isSaving ? 'Salvando...' : saveSuccess ? 'Salvo!' : 'Salvar Alterações'}
                     </button>
-                </div>
-            </header>
+                }
+            />
 
             <div className="space-y-12">
                 {SETTING_GROUPS.map((group) => (

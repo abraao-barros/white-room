@@ -12,6 +12,7 @@ import { Select } from '@/components/ui/Select'
 
 import { AVAILABLE_ICONS } from '@/components/_constants/available_icons'
 import { uploadToR2 } from '@/lib/upload'
+import { PageHeader } from './dashboard/PageHeader'
 
 export default function BudgetForm({ initialData }: { initialData?: any }) {
     const [formData, setFormData] = useState({
@@ -164,38 +165,40 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
     return (
         <form onSubmit={handleSubmit} className="max-w-[1600px] mx-auto animate-in fade-in duration-700">
             {/* Page Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
-                <div>
-                    <h1 className="text-4xl font-black tracking-tight mb-2">
-                        {initialData ? 'Editar Orçamento' : 'Criar Orçamento'}
-                    </h1>
-                    <p className="text-muted font-medium">Configure seu orçamento e entregáveis.</p>
-                </div>
-                <div className="flex items-center gap-4">
-                    {savedBudget && (
-                        <Link
-                            href={`/orcamento/${savedBudget.slug}`}
-                            target="_blank"
-                            className="btn-secondary h-12 px-6 flex items-center gap-2 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all animate-in slide-in-from-right-4"
+            <PageHeader
+                backLink={{
+                    href: '/dashboard',
+                    label: 'Voltar para o Dashboard'
+                }}
+                title={initialData ? 'Editar Orçamento' : 'Criar Orçamento'}
+                description="Configure seu orçamento e entregáveis."
+                actions={
+                    <div className="flex items-center gap-4">
+                        {savedBudget && (
+                            <Link
+                                href={`/orcamento/${savedBudget.slug}`}
+                                target="_blank"
+                                className="btn-secondary h-12 px-6 flex items-center gap-2 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all animate-in slide-in-from-right-4"
+                            >
+                                <ExternalLink size={18} />
+                                Visualizar Orçamento
+                            </Link>
+                        )}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`btn-primary h-12 px-10 shadow-xl flex items-center gap-2 transition-all duration-500 ${showSuccess ? 'bg-green-600 shadow-green-500/20' : 'shadow-primary/20'}`}
                         >
-                            <ExternalLink size={18} />
-                            Visualizar Orçamento
-                        </Link>
-                    )}
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`btn-primary h-12 px-10 shadow-xl flex items-center gap-2 transition-all duration-500 ${showSuccess ? 'bg-green-600 shadow-green-500/20' : 'shadow-primary/20'}`}
-                    >
-                        {loading ? (
-                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        ) : showSuccess ? (
-                            <Check size={18} className="animate-in zoom-in" />
-                        ) : null}
-                        {loading ? 'Salvando...' : showSuccess ? 'Salvo!' : (initialData ? 'Atualizar Orçamento' : 'Salvar Orçamento')}
-                    </button>
-                </div>
-            </div>
+                            {loading ? (
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : showSuccess ? (
+                                <Check size={18} className="animate-in zoom-in" />
+                            ) : null}
+                            {loading ? 'Salvando...' : showSuccess ? 'Salvo!' : (initialData ? 'Atualizar Orçamento' : 'Salvar Orçamento')}
+                        </button>
+                    </div>
+                }
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
                 {/* Left Side: Form Sections */}
@@ -409,22 +412,52 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                         <div className="grid grid-cols-1 gap-6">
                             {formData.processSteps.map((step: any, index: number) => (
                                 <div key={index} className="relative group p-6 rounded-2xl bg-[#16161a] border border-white/5 hover:border-primary/20 transition-all duration-300">
-                                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                        <div className="md:col-span-4 space-y-4">
-                                            <div className="space-y-2">
-                                                <Label className="text-[10px] ml-0">Título da Etapa</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="input-base h-10 text-sm"
-                                                    value={step.title}
-                                                    onChange={(e) => handleProcessStepChange(index, 'title', e.target.value)}
-                                                    placeholder="Design & Prototipagem"
+                                    <div className="flex flex-col gap-6">
+                                        {/* Row 1: Image Upload */}
+                                        <div className="space-y-2">
+                                            <Label className="text-[10px] ml-0">Capa do Processo (Opcional)</Label>
+                                            <div className="relative">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    id={`process-image-${index}`}
+                                                    onChange={(e) => handleImageUpload(index, e)}
+                                                    disabled={uploadingStep === index}
                                                 />
+                                                <label
+                                                    htmlFor={`process-image-${index}`}
+                                                    className="flex items-center justify-center gap-3 h-20 px-4 rounded-xl border border-dashed border-white/20 bg-white/1 pool hover:bg-white/10 text-xs font-bold cursor-pointer transition-all w-full overflow-hidden group/upload"
+                                                >
+                                                    {uploadingStep === index ? (
+                                                        <div className="flex items-center gap-2">
+                                                            <Loader2 size={16} className="animate-spin text-primary" />
+                                                            <span className="text-muted italic animate-pulse">Enviando para nuvem...</span>
+                                                        </div>
+                                                    ) : step.imageUrl ? (
+                                                        <div className="flex items-center justify-between w-full px-2">
+                                                            <div className="flex items-center gap-2 max-w-[80%] overflow-hidden">
+                                                                <Check size={16} className="text-green-500 shrink-0" />
+                                                                <span className="truncate text-white/80">{step.imageUrl.split('/').pop()}</span>
+                                                            </div>
+                                                            <span className="text-[10px] text-primary hover:underline">Trocar imagem</span>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center gap-2">
+                                                            <ImageIcon size={16} className="text-muted group-hover/upload:text-primary transition-colors" />
+                                                            <span className="text-muted group-hover/upload:text-white transition-colors uppercase tracking-wider">Clique para anexar imagem de capa</span>
+                                                        </div>
+                                                    )}
+                                                </label>
                                             </div>
+                                        </div>
+
+                                        {/* Row 2: Icon and Title side-by-side */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <Label className="text-[10px] ml-0">Ícone Visual</Label>
                                                 <Select
-                                                    className="h-10 text-sm"
+                                                    className="text-sm"
                                                     value={step.icon}
                                                     onChange={(e) => handleProcessStepChange(index, 'icon', e.target.value)}
                                                 >
@@ -437,41 +470,22 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                                                 </Select>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="text-[10px] ml-0">Capa do Processo (Opcional)</Label>
-                                                <div className="relative">
-                                                     <input 
-                                                          type="file" 
-                                                          accept="image/*"
-                                                          className="hidden" 
-                                                          id={`process-image-${index}`}
-                                                          onChange={(e) => handleImageUpload(index, e)}
-                                                          disabled={uploadingStep === index}
-                                                     />
-                                                     <label 
-                                                         htmlFor={`process-image-${index}`}
-                                                         className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl border border-dashed border-white/20 bg-white/5 hover:bg-white/10 text-xs font-bold cursor-pointer transition-colors w-full overflow-hidden"
-                                                     >
-                                                         {uploadingStep === index ? (
-                                                             <Loader2 size={14} className="animate-spin text-primary" />
-                                                         ) : step.imageUrl ? (
-                                                             <>
-                                                                <Check size={14} className="text-green-500" />
-                                                                <span className="truncate">{step.imageUrl.split('/').pop()}</span>
-                                                             </>
-                                                         ) : (
-                                                             <>
-                                                                <ImageIcon size={14} className="text-muted" />
-                                                                <span className="text-muted group-hover:text-white transition-colors">Anexar imagem...</span>
-                                                             </>
-                                                         )}
-                                                     </label>
-                                                </div>
+                                                <Label className="text-[10px] ml-0">Título da Etapa</Label>
+                                                <Input
+                                                    type="text"
+                                                    className="input-base text-sm"
+                                                    value={step.title}
+                                                    onChange={(e) => handleProcessStepChange(index, 'title', e.target.value)}
+                                                    placeholder="Design & Prototipagem"
+                                                />
                                             </div>
                                         </div>
-                                        <div className="md:col-span-8 space-y-2">
+
+                                        {/* Row 3: Description */}
+                                        <div className="space-y-2">
                                             <Label className="text-[10px] ml-0">Descrição detalhada</Label>
                                             <Textarea
-                                                className="input-base min-h-[100px] text-xs py-2 resize-none"
+                                                className="input-base min-h-[100px] text-sm py-3 resize-none focus:min-h-[140px] transition-all duration-300"
                                                 value={step.description}
                                                 onChange={(e) => handleProcessStepChange(index, 'description', e.target.value)}
                                                 placeholder="Descreva o que acontece nesta fase..."
@@ -616,7 +630,7 @@ export default function BudgetForm({ initialData }: { initialData?: any }) {
                             </li>
                         </ul>
                     </div>
-                    
+
                     {/* Action Sticky Button */}
                     <div className={`transition-all duration-500 ease-out ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
                         <button

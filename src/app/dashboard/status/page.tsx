@@ -4,6 +4,7 @@ import { getSession } from '@/lib/auth'
 import { CheckCircle2, Clock, Briefcase, Calendar, User, ArrowRight, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { eq, desc } from 'drizzle-orm'
+import { PageHeader } from '@/components/dashboard/PageHeader'
 
 export default async function StatusPage() {
     const session = await getSession()
@@ -16,10 +17,14 @@ export default async function StatusPage() {
     return (
         <div className="p-10 max-w-[1600px] mx-auto animate-in fade-in duration-700">
             <header className="mb-12">
-                <h1 className="text-4xl font-black mb-3 tracking-tight">Status de Orçamentos</h1>
-                <p className="text-muted text-lg italic tracking-tight font-medium opacity-70">
-                    Acompanhe o progresso das suas propostas comerciais.
-                </p>
+                <PageHeader
+                    backLink={{
+                        href: '/dashboard',
+                        label: 'Voltar para o Dashboard'
+                    }}
+                    title="Status de Orçamentos"
+                    description="Acompanhe o progresso das suas propostas comerciais."
+                />
             </header>
 
             <div className="grid grid-cols-1 gap-6">
